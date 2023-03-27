@@ -1,4 +1,5 @@
 import os
+from random import randint
 
 
 def install_ros():
@@ -21,13 +22,14 @@ def install_vcs():
 
 def configure_env():
     os.system('echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc')
-    os.system('echo "export ROS_DOMAIN_ID=1" >> ~/.bashrc')
+    ros_domain_id = randint(0, 101)
+    os.system(f'echo "export ROS_DOMAIN_ID={ros_domain_id}" >> ~/.bashrc')
     os.system('sudo apt install ros-humble-rmw-cyclonedds-cpp')
     os.system('echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc')
 
 
 def build_repo():
-    os.system('vcs import src < pm.repos')
+    os.system('python3 vcs_p.py --init')
     os.system('rosdep install -i --from-path src --rosdistro humble -y')
     os.system('sudo apt install python3-colcon-common-extensions')
     os.system('colcon build')
