@@ -1,0 +1,41 @@
+{
+    "repos": [
+        "pm_3rdparty",
+        "pm_msgs",
+        "pm_simulation",
+        "pm_tests",
+        "pm_bringup",
+        "pm_gui",
+        "pm_behavior_tree",
+        "pm_moveit_servo",
+        "pm_moveit_config",
+        "pm_rviz_plugins",
+        "pm_description",
+        "pm_play_motion",
+        "pm_utils"
+    ],
+    "editor": "atom",
+    "editor_commit": "nano",
+    "autor": "Promobot",
+    "profile": "default",
+    "profiles": {
+        "default": {
+            "branch_name": "develop",
+            "repos": [
+                "pm_3rdparty",
+                "pm_msgs",
+                "pm_simulation",
+                "pm_tests",
+                "pm_bringup",
+                "pm_gui",
+                "pm_behavior_tree",
+                "pm_moveit_servo",
+                "pm_moveit_config",
+                "pm_rviz_plugins",
+                "pm_description",
+                "pm_play_motion",
+                "pm_utils"
+            ]
+        }
+    }
+}

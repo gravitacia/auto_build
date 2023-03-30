@@ -6,13 +6,21 @@ import subprocess
 import threading
 
 
+def install_pip():
+    cprint("//////////////////", 'green', 'on_red')
+    cprint("INITIALISING PIP", 'green', 'on_red')
+    cprint("//////////////////", 'green', 'on_red')
+    os.system('sudo apt -y install python3-pip')
+
+
 def install_pip_libs():
     cprint("//////////////////", 'green', 'on_red')
     cprint("INITIALISING LIBS", 'green', 'on_red')
     cprint("//////////////////", 'green', 'on_red')
 
-    os.system('pip freeze > requirements.txt')
-    os.system('pip install -r requirements.txt --upgrade')
+    os.system('pip install psutil')
+    os.system('pip install pygit2')
+    os.system('pip install vcstool')
 
 
 def clone_repo():
@@ -43,8 +51,7 @@ def install_ros():
         'sudo apt install ros-humble-desktop',
         'sudo apt install ros-humble-ros-base',
         'sudo apt install ros-dev-tools',
-        'sudo chmod +rwx /opt/ros/humble/setup.bash',
-        '/bin/bash -c "source /opt/ros/humble/setup.bash"'
+        '/opt/ros/humble/setup.bash'
     ]
 
     for cmd in commands:
@@ -109,7 +116,6 @@ def build_repo():
 
 
 def build():
-    #install_pip_libs()
     install_vcs()
     clone_repo()
     install_ros()
@@ -118,25 +124,3 @@ def build():
 
 
 build()
-
-
-def execute_sudo_commands():
-    executed_commands = []
-
-    while True:
-        output = subprocess.check_output(['dmesg'])
-        lines = output.decode().strip().split('\n')
-
-        for line in lines:
-            if 'sudo' in line and line not in executed_commands:
-                executed_commands.append(line)
-                subprocess.run(line.split(), check=True)
-        time.sleep(1)
-
-
-t1 = threading.Thread(target=build)
-t2 = threading.Thread(target=execute_sudo_commands)
-t1.start()
-t2.start()
-t1.join()
-t2.join()

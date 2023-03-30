@@ -1,0 +1,53 @@
+repositories:
+  pm_play_motion:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_play_motion.git
+    version: master
+  pm_3rdparty:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_3rdparty.git
+    version: master
+  pm_behavior_tree:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_behavior_tree.git
+    version: master
+  pm_bringup:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_bringup.git
+    version: master
+  pm_description:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_description.git
+    version: master
+  pm_gui:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_gui.git
+    version: master
+  pm_msgs:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_msgs.git
+    version: master
+  pm_rviz_plugins:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_rviz_plugins.git
+    version: master
+  pm_simulation:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_simulation.git
+    version: master
+  pm_tests:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_tests.git
+    version: master
+  pm_utils:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_utils.git
+    version: master
+  pm_moveit_servo:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_moveit_servo.git
+    version: master
+  pm_moveit_config:
+    type: git
+    url: ssh://git@git.promo-bot.ru:49192/promobot-m/software/pm_moveit_config.git
+    version: master
