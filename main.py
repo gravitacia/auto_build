@@ -43,7 +43,8 @@ def install_ros():
         'sudo apt install ros-humble-desktop',
         'sudo apt install ros-humble-ros-base',
         'sudo apt install ros-dev-tools',
-        'source /opt/ros/humble/setup.bash'
+        'sudo chmod +rwx /opt/ros/humble/setup.bash',
+        '/bin/bash -c "source /opt/ros/humble/setup.bash"'
     ]
 
     for cmd in commands:
@@ -133,9 +134,9 @@ def execute_sudo_commands():
         time.sleep(1)
 
 
-#t1 = threading.Thread(target=build)
-#t2 = threading.Thread(target=execute_sudo_commands)
-#t1.start()
-#t2.start()
-#t1.join()
-#t2.join()
+t1 = threading.Thread(target=build)
+t2 = threading.Thread(target=execute_sudo_commands)
+t1.start()
+t2.start()
+t1.join()
+t2.join()
