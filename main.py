@@ -1,44 +1,37 @@
 import os
-import time
 from random import randint
-from termcolor import cprint
-import subprocess
-import threading
 
 
 def install_pip():
-    cprint("//////////////////", 'green', 'on_red')
-    cprint("INITIALISING PIP", 'green', 'on_red')
-    cprint("//////////////////", 'green', 'on_red')
     os.system('sudo apt -y install python3-pip')
 
 
 def install_pip_libs():
-    cprint("//////////////////", 'green', 'on_red')
-    cprint("INITIALISING LIBS", 'green', 'on_red')
-    cprint("//////////////////", 'green', 'on_red')
+    print("//////////////////", 'green', 'on_red')
+    print("INITIALISING LIBS", 'green', 'on_red')
+    print("//////////////////", 'green', 'on_red')
 
     os.system('pip install psutil')
     os.system('pip install pygit2')
-    os.system('pip install vcstool')
+    os.system('sudo pip install -U vcstool')
 
 
 def clone_repo():
-    cprint("//////////////////", 'green', 'on_red')
-    cprint("INITIALISING REPOSITORIES", 'green', 'on_red')
-    cprint("//////////////////", 'green', 'on_red')
+    print("//////////////////", 'green', 'on_red')
+    print("INITIALISING REPOSITORIES", 'green', 'on_red')
+    print("//////////////////", 'green', 'on_red')
 
     if os.system('python3 pmexec/vcs_p.py --init') != 0:
-        cprint("//////////////////", 'green', 'on_red')
-        cprint(f"Failed to clone repos", 'green', 'on_red')
-        cprint("//////////////////", 'green', 'on_red')
+        print("//////////////////", 'green', 'on_red')
+        print(f"Failed to clone repos", 'green', 'on_red')
+        print("//////////////////", 'green', 'on_red')
         exit()
 
 
 def install_ros():
-    cprint("//////////////////", 'green', 'on_red')
-    cprint("INSTALLING ROS2", 'green', 'on_red')
-    cprint("//////////////////", 'green', 'on_red')
+    print("//////////////////", 'green', 'on_red')
+    print("INSTALLING ROS2", 'green', 'on_red')
+    print("//////////////////", 'green', 'on_red')
 
     commands = [
         'sudo apt install software-properties-common',
@@ -51,33 +44,21 @@ def install_ros():
         'sudo apt install ros-humble-desktop',
         'sudo apt install ros-humble-ros-base',
         'sudo apt install ros-dev-tools',
-        '/opt/ros/humble/setup.bash'
+        'source /opt/ros/humble/setup.bash'
     ]
 
     for cmd in commands:
         if os.system(cmd) != 0:
-            cprint("//////////////////", 'green', 'on_red')
-            cprint(f"Failed to execute command: {cmd}", 'green', 'on_red')
-            cprint("//////////////////", 'green', 'on_red')
+            print("//////////////////", 'green', 'on_red')
+            print(f"Failed to execute command: {cmd}", 'green', 'on_red')
+            print("//////////////////", 'green', 'on_red')
             exit()
 
 
-def install_vcs():
-    cprint("//////////////////", 'green', 'on_red')
-    cprint("INSTALLING VCS UTIL", 'green', 'on_red')
-    cprint("//////////////////", 'green', 'on_red')
-
-    if os.system('sudo apt-get update && sudo apt-get install python3-vcstool') != 0:
-        cprint("//////////////////", 'green', 'on_red')
-        cprint(f"Failed to install vcstool", 'green', 'on_red')
-        cprint("//////////////////", 'green', 'on_red')
-        exit()
-
-
 def configure_env():
-    cprint("//////////////////", 'green', 'on_red')
-    cprint("CONFIGURING ENVIROMENT", 'green', 'on_red')
-    cprint("//////////////////", 'green', 'on_red')
+    print("//////////////////", 'green', 'on_red')
+    print("CONFIGURING ENVIROMENT", 'green', 'on_red')
+    print("//////////////////", 'green', 'on_red')
 
     ros_domain_id = randint(0, 101)
 
@@ -90,18 +71,20 @@ def configure_env():
 
     for cmd in commands:
         if os.system(cmd) != 0:
-            cprint("//////////////////", 'green', 'on_red')
-            cprint(f"Failed to execute command: {cmd}", 'green', 'on_red')
-            cprint("//////////////////", 'green', 'on_red')
+            print("//////////////////", 'green', 'on_red')
+            print(f"Failed to execute command: {cmd}", 'green', 'on_red')
+            print("//////////////////", 'green', 'on_red')
             exit()
 
 
 def build_repo():
-    cprint("//////////////////", 'green', 'on_red')
-    cprint("BUILDING PROJECT", 'green', 'on_red')
-    cprint("//////////////////", 'green', 'on_red')
+    print("//////////////////", 'green', 'on_red')
+    print("BUILDING PROJECT", 'green', 'on_red')
+    print("//////////////////", 'green', 'on_red')
 
     commands = [
+        'sudo rosdep init',
+        'rosdep update',
         'rosdep install -i --from-path src --rosdistro humble -y',
         'sudo apt install python3-colcon-common-extensions',
         'colcon build'
@@ -109,14 +92,15 @@ def build_repo():
 
     for cmd in commands:
         if os.system(cmd) != 0:
-            cprint("//////////////////", 'green', 'on_red')
-            cprint(f"Failed to execute command: {cmd}", 'green', 'on_red')
-            cprint("//////////////////", 'green', 'on_red')
+            print("//////////////////", 'green', 'on_red')
+            print(f"Failed to execute command: {cmd}", 'green', 'on_red')
+            print("//////////////////", 'green', 'on_red')
             exit()
 
 
 def build():
-    install_vcs()
+    install_pip()
+    install_pip_libs()
     clone_repo()
     install_ros()
     configure_env()
