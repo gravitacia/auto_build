@@ -6,12 +6,21 @@ import subprocess
 import threading
 
 
+def install_pip_libs():
+    cprint("//////////////////", 'green', 'on_red')
+    cprint("INITIALISING LIBS", 'green', 'on_red')
+    cprint("//////////////////", 'green', 'on_red')
+
+    os.system('pip freeze > requirements.txt')
+    os.system('pip install -r requirements.txt --upgrade')
+
+
 def clone_repo():
     cprint("//////////////////", 'green', 'on_red')
     cprint("INITIALISING REPOSITORIES", 'green', 'on_red')
     cprint("//////////////////", 'green', 'on_red')
 
-    if os.system('vcs import src < pm.repos') != 0:
+    if os.system('python3 pmexec/vcs_p.py --init') != 0:
         cprint("//////////////////", 'green', 'on_red')
         cprint(f"Failed to clone repos", 'green', 'on_red')
         cprint("//////////////////", 'green', 'on_red')
@@ -24,12 +33,15 @@ def install_ros():
     cprint("//////////////////", 'green', 'on_red')
 
     commands = [
-        'sudo apt update && sudo apt install curl gnupg2 lsb-release',
-        'curl -s https://raw.githubusercontent.com/ros/rosdistro/master/ros.asc | sudo apt-key add -',
-        'sudo sh -c "echo \'deb [arch=amd64,arm64] http://packages.ros.org/ros2/ubuntu/ `lsb_release -cs` main\' > '
-        '/etc/apt/sources.list.d/ros2-latest.list"',
+        'sudo apt install software-properties-common',
+        'sudo add-apt-repository universe',
+        'sudo apt update && sudo apt install curl',
+        'sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg',
+        'echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null',
         'sudo apt update',
+        'sudo apt upgrade',
         'sudo apt install ros-humble-desktop',
+        'sudo apt install ros-humble-ros-base',
         'sudo apt install ros-dev-tools',
         'source /opt/ros/humble/setup.bash'
     ]
@@ -96,11 +108,15 @@ def build_repo():
 
 
 def build():
+    #install_pip_libs()
     install_vcs()
     clone_repo()
     install_ros()
     configure_env()
     build_repo()
+
+
+build()
 
 
 def execute_sudo_commands():
@@ -117,9 +133,9 @@ def execute_sudo_commands():
         time.sleep(1)
 
 
-t1 = threading.Thread(target=build)
-t2 = threading.Thread(target=execute_sudo_commands)
-t1.start()
-t2.start()
-t1.join()
-t2.join()
+#t1 = threading.Thread(target=build)
+#t2 = threading.Thread(target=execute_sudo_commands)
+#t1.start()
+#t2.start()
+#t1.join()
+#t2.join()
