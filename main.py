@@ -83,9 +83,9 @@ def build_repo():
     print("//////////////////", 'green', 'on_red')
 
     commands = [
+        'rosdep install -i --from-path src --rosdistro humble -y',
         'sudo rosdep init',
         'rosdep update',
-        'rosdep install -i --from-path src --rosdistro humble -y',
         'sudo apt install python3-colcon-common-extensions',
         'colcon build'
     ]
