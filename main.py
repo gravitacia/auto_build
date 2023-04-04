@@ -1,5 +1,10 @@
 import os
 from random import randint
+import sys
+
+
+red = '\033[91m'
+reset = '\033[0m'
 
 
 def install_pip():
@@ -7,9 +12,9 @@ def install_pip():
 
 
 def install_pip_libs():
-    print("//////////////////", 'green', 'on_red')
-    print("INITIALISING LIBS", 'green', 'on_red')
-    print("//////////////////", 'green', 'on_red')
+    print(red + "//////////////////" + reset)
+    print(red + "INITIALISING LIBS" + reset)
+    print(red + "//////////////////" + reset)
 
     os.system('pip install psutil')
     os.system('pip install pygit2')
@@ -17,21 +22,21 @@ def install_pip_libs():
 
 
 def clone_repo():
-    print("//////////////////", 'green', 'on_red')
-    print("INITIALISING REPOSITORIES", 'green', 'on_red')
-    print("//////////////////", 'green', 'on_red')
+    print(red + "//////////////////" + reset)
+    print(red + "INITIALISING REPOSITORIES" + reset)
+    print(red + "//////////////////" + reset)
 
     if os.system('python3 pmexec/vcs_p.py --init') != 0:
-        print("//////////////////", 'green', 'on_red')
-        print(f"Failed to clone repos", 'green', 'on_red')
-        print("//////////////////", 'green', 'on_red')
+        print(red + "//////////////////" + reset)
+        print(red + f"Failed to clone repos" + reset)
+        print(red + "//////////////////" + reset)
         exit()
 
 
 def install_ros():
-    print("//////////////////", 'green', 'on_red')
-    print("INSTALLING ROS2", 'green', 'on_red')
-    print("//////////////////", 'green', 'on_red')
+    print(red + "//////////////////" + reset)
+    print(red + "INSTALLING ROS2" + reset)
+    print(red + "//////////////////" + reset)
 
     commands = [
         'sudo apt install software-properties-common',
@@ -49,16 +54,16 @@ def install_ros():
 
     for cmd in commands:
         if os.system(cmd) != 0:
-            print("//////////////////", 'green', 'on_red')
-            print(f"Failed to execute command: {cmd}", 'green', 'on_red')
-            print("//////////////////", 'green', 'on_red')
+            print(red + "//////////////////" + reset)
+            print(red + f"Failed to execute command: {cmd}" + reset)
+            print(red + "//////////////////" + reset)
             exit()
 
 
 def configure_env():
-    print("//////////////////", 'green', 'on_red')
-    print("CONFIGURING ENVIROMENT", 'green', 'on_red')
-    print("//////////////////", 'green', 'on_red')
+    print(red + "//////////////////" + reset)
+    print(red + "CONFIGURING ENVIROMENT" + reset)
+    print(red + "//////////////////" + reset)
 
     ros_domain_id = randint(0, 101)
 
@@ -71,16 +76,16 @@ def configure_env():
 
     for cmd in commands:
         if os.system(cmd) != 0:
-            print("//////////////////", 'green', 'on_red')
-            print(f"Failed to execute command: {cmd}", 'green', 'on_red')
-            print("//////////////////", 'green', 'on_red')
+            print(red + "//////////////////" + reset)
+            print(red  + f"Failed to execute command: {cmd}" + reset)
+            print(red + "//////////////////" + reset)
             exit()
 
 
 def build_repo():
-    print("//////////////////", 'green', 'on_red')
-    print("BUILDING PROJECT", 'green', 'on_red')
-    print("//////////////////", 'green', 'on_red')
+    print(red + "//////////////////" + reset)
+    print(red + "BUILDING PROJECT" + reset)
+    print(red + "//////////////////" + reset)
 
     commands = [
         'rosdep install -i --from-path src --rosdistro humble -y',
@@ -92,9 +97,9 @@ def build_repo():
 
     for cmd in commands:
         if os.system(cmd) != 0:
-            print("//////////////////", 'green', 'on_red')
-            print(f"Failed to execute command: {cmd}", 'green', 'on_red')
-            print("//////////////////", 'green', 'on_red')
+            print(red + "//////////////////" + reset)
+            print(red + f"Failed to execute command: {cmd}" + reset)
+            print(red + "//////////////////" + reset)
             exit()
 
 
