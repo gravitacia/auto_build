@@ -3,18 +3,17 @@ from random import randint
 import sys
 
 red = '\033[91m'
-reset= '\033[0m'
+reset = '\033[0m'
+
 
 def execute(commands_list, title):
-    print(f"{red }{'-'*50} {title} {'-'*50}{reset}")
+    print(f"{red}{'-' * 25} {title} {'-' * 25}{reset}")
     for cmd in commands_list:
-        print(f"{red }>>> {cmd}{reset}")
+        print(f"{red}>>> {cmd}{reset}")
         if os.system(cmd) != 0:
-            print(f"{red }Command execution failed: {cmd}{reset}")
-            return False
-    print(f"{red }{'-'*50}{' '*len(title)}{'-'*50}{reset}")
-    return True
-
+            print(f"{red}Command execution failed: {cmd}{reset}")
+            sys.exit(1)
+    print(f"{red}{'-' * 25}{' ' * len(title)}{'-' * 25}{reset}")
 
 
 def install_pip():
@@ -34,6 +33,7 @@ def install_pip_libs():
 def clone_repo():
     cmd = ['python3 pmexec/vcs_p.py --init']
     execute(cmd, 'CLONE REPOS')
+
 
 def install_ros():
     cmd = [
@@ -67,18 +67,18 @@ def configure_env():
 
 def build_repo():
     cmd = [
-        'rosdep install -i --from-path src --rosdistro humble -y',
         'sudo rosdep init',
         'rosdep update',
+        'rosdep install -i --from-path src --rosdistro humble -y',
         'sudo apt install python3-colcon-common-extensions',
         'colcon build'
     ]
 
     execute(cmd, 'BUILDING PROJECT')
-    
+
 
 def build():
-    install_pip(execute())
+    install_pip()
     install_pip_libs()
     clone_repo()
     install_ros()
