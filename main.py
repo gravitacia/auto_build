@@ -2,43 +2,41 @@ import os
 from random import randint
 import sys
 
-
 red = '\033[91m'
-reset = '\033[0m'
+reset= '\033[0m'
+
+def execute(commands_list, title):
+    print(f"{red }{'-'*50} {title} {'-'*50}{reset}")
+    for cmd in commands_list:
+        print(f"{red }>>> {cmd}{reset}")
+        if os.system(cmd) != 0:
+            print(f"{red }Command execution failed: {cmd}{reset}")
+            return False
+    print(f"{red }{'-'*50}{' '*len(title)}{'-'*50}{reset}")
+    return True
+
 
 
 def install_pip():
-    os.system('sudo apt -y install python3-pip')
+    cmd = ['sudo apt -y install python3-pip']
+    execute(cmd, 'INSTALLING PIP')
 
 
 def install_pip_libs():
-    print(red + "//////////////////" + reset)
-    print(red + "INITIALISING LIBS" + reset)
-    print(red + "//////////////////" + reset)
-
-    os.system('pip install psutil')
-    os.system('pip install pygit2')
-    os.system('sudo pip install -U vcstool')
+    cmd = [
+        'pip install psutil',
+        'pip install pygit2',
+        'sudo pip install -U vcstool'
+    ]
+    execute(cmd, 'INSTALLING PIP LIBS')
 
 
 def clone_repo():
-    print(red + "//////////////////" + reset)
-    print(red + "INITIALISING REPOSITORIES" + reset)
-    print(red + "//////////////////" + reset)
-
-    if os.system('python3 pmexec/vcs_p.py --init') != 0:
-        print(red + "//////////////////" + reset)
-        print(red + f"Failed to clone repos" + reset)
-        print(red + "//////////////////" + reset)
-        exit()
-
+    cmd = ['python3 pmexec/vcs_p.py --init']
+    execute(cmd, 'CLONE REPOS')
 
 def install_ros():
-    print(red + "//////////////////" + reset)
-    print(red + "INSTALLING ROS2" + reset)
-    print(red + "//////////////////" + reset)
-
-    commands = [
+    cmd = [
         'sudo apt install software-properties-common',
         'sudo add-apt-repository universe',
         'sudo apt update && sudo apt install curl',
@@ -52,42 +50,23 @@ def install_ros():
         'source /opt/ros/humble/setup.bash'
     ]
 
-    for cmd in commands:
-        if os.system(cmd) != 0:
-            print(red + "//////////////////" + reset)
-            print(red + f"Failed to execute command: {cmd}" + reset)
-            print(red + "//////////////////" + reset)
-            exit()
+    execute(cmd, 'INSTALLING ROS2')
 
 
 def configure_env():
-    print(red + "//////////////////" + reset)
-    print(red + "CONFIGURING ENVIROMENT" + reset)
-    print(red + "//////////////////" + reset)
-
     ros_domain_id = randint(0, 101)
-
-    commands = [
+    cmd = [
         'echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc',
         'echo "export ROS_DOMAIN_ID={ros_domain_id}" >> ~/.bashrc',
         'sudo apt install ros-humble-rmw-cyclonedds-cpp',
         'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc'
     ]
 
-    for cmd in commands:
-        if os.system(cmd) != 0:
-            print(red + "//////////////////" + reset)
-            print(red  + f"Failed to execute command: {cmd}" + reset)
-            print(red + "//////////////////" + reset)
-            exit()
+    execute(cmd, 'CONFIGURING ENVIROMENT')
 
 
 def build_repo():
-    print(red + "//////////////////" + reset)
-    print(red + "BUILDING PROJECT" + reset)
-    print(red + "//////////////////" + reset)
-
-    commands = [
+    cmd = [
         'rosdep install -i --from-path src --rosdistro humble -y',
         'sudo rosdep init',
         'rosdep update',
@@ -95,16 +74,11 @@ def build_repo():
         'colcon build'
     ]
 
-    for cmd in commands:
-        if os.system(cmd) != 0:
-            print(red + "//////////////////" + reset)
-            print(red + f"Failed to execute command: {cmd}" + reset)
-            print(red + "//////////////////" + reset)
-            exit()
-
+    execute(cmd, 'BUILDING PROJECT')
+    
 
 def build():
-    install_pip()
+    install_pip(execute())
     install_pip_libs()
     clone_repo()
     install_ros()
