@@ -6,14 +6,15 @@ red = '\033[91m'
 reset = '\033[0m'
 
 
-def execute(commands_list, title):
-    print(f"{red}{'-' * 25} {title} {'-' * 25}{reset}")
+def execute(commands_list, *title):
+    separator = '-' * 25
+    print(f"{red}{separator} {' '.join(title)} {separator}{reset}")
     for cmd in commands_list:
         print(f"{red}>>> {cmd}{reset}")
         if os.system(cmd) != 0:
             print(f"{red}Command execution failed: {cmd}{reset}")
             sys.exit(1)
-    print(f"{red}{'-' * 25}{' ' * len(title)}{'-' * 25}{reset}")
+    print(f"{red}{separator}{' ' * len(' '.join(title))}{separator}{reset}")
 
 
 def install_pip():
@@ -55,6 +56,7 @@ def install_ros():
 
 def configure_env():
     ros_domain_id = randint(0, 101)
+    print(f"{red}{'-' * 25} {ros_domain_id} {'-' * 25}{reset}")
     cmd = [
         'echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc',
         'echo "export ROS_DOMAIN_ID={ros_domain_id}" >> ~/.bashrc',
