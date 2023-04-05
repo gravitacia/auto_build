@@ -6,15 +6,23 @@ red = '\033[91m'
 reset = '\033[0m'
 
 
-def execute(commands_list, *title):
+def execute(commands_list, title):
     separator = '-' * 25
-    print(f"{red}{separator} {' '.join(title)} {separator}{reset}")
-    for cmd in commands_list:
-        print(f"{red}>>> {cmd}{reset}")
-        if os.system(cmd) != 0:
-            print(f"{red}Command execution failed: {cmd}{reset}")
-            sys.exit(1)
-    print(f"{red}{separator}{' ' * len(' '.join(title))}{separator}{reset}")
+    print(f"{red}{separator} {title} {separator}{reset}")
+
+    for cmd_input in commands_list:
+        cmd = cmd_input.split()
+        print(f"{red}>>> {' '.join(cmd)}{reset}")
+
+        process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if process.returncode != 0:
+            print(f"{red}Command execution failed: {' '.join(cmd)}{reset}")
+            print(f"{red}{process.stderr.decode('utf-8')}{reset}")
+            exit()
+
+        print(f"{red}{process.stdout.decode('utf-8')}{reset}")
+
+    print(f"{red}{separator}{' ' * len(title)}{separator}{reset}")
 
 
 def install_pip():
@@ -48,7 +56,7 @@ def install_ros():
         'sudo apt install ros-humble-desktop',
         'sudo apt install ros-humble-ros-base',
         'sudo apt install ros-dev-tools',
-        'source /opt/ros/humble/setup.bash'
+        'bash /opt/ros/humble/setup.bash'
     ]
 
     execute(cmd, 'INSTALLING ROS2')
