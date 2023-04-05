@@ -66,11 +66,11 @@ def configure_env():
     ros_domain_id = randint(0, 101)
     print(f"{red}{'-' * 25} {ros_domain_id} {'-' * 25}{reset}")
     cmd = [
-        'gedit -s ~/.bashrc',
         'echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc',
         'echo "export ROS_DOMAIN_ID={ros_domain_id}" >> ~/.bashrc',
         'sudo apt install ros-humble-rmw-cyclonedds-cpp',
-        'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc'
+        'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc',
+        'gedit -s ~/.bashrc'
     ]
 
     execute(cmd, 'CONFIGURING ENVIROMENT')
