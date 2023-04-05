@@ -1,6 +1,6 @@
-import os
+import subprocess
 from random import randint
-import sys
+
 
 red = '\033[91m'
 reset = '\033[0m'
@@ -12,40 +12,38 @@ def execute(commands_list, title):
 
     for cmd_input in commands_list:
         cmd = cmd_input.split()
-        print(f"{red}>>> {' '.join(cmd)}{reset}")
-
+        print(f"{' '.join(cmd)}")
         process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if process.returncode != 0:
             print(f"{red}Command execution failed: {' '.join(cmd)}{reset}")
             print(f"{red}{process.stderr.decode('utf-8')}{reset}")
             exit()
 
-        print(f"{red}{process.stdout.decode('utf-8')}{reset}")
-
+        print(f"{process.stdout.decode('utf-8')}")
     print(f"{red}{separator}{' ' * len(title)}{separator}{reset}")
 
 
 def install_pip():
-    cmd = ['sudo apt -y install python3-pip']
-    execute(cmd, 'INSTALLING PIP')
+    commands = ['sudo apt -y install python3-pip']
+    execute(commands, 'INSATLLING PIP')
 
 
 def install_pip_libs():
-    cmd = [
+    commands = [
         'pip install psutil',
         'pip install pygit2',
         'sudo pip install -U vcstool'
     ]
-    execute(cmd, 'INSTALLING PIP LIBS')
+    execute(commands, 'INSTALLING PIP LIBS')
 
 
 def clone_repo():
-    cmd = ['python3 pmexec/vcs_p.py --init']
-    execute(cmd, 'CLONE REPOS')
+    commands = ['python3 pmexec/vcs_p.py --init']
+    execute(commands, 'CLONE REPOS')
 
 
 def install_ros():
-    cmd = [
+    commands = [
         'sudo apt install software-properties-common',
         'sudo add-apt-repository universe',
         'sudo apt update && sudo apt install curl',
@@ -56,36 +54,33 @@ def install_ros():
         'sudo apt install ros-humble-desktop',
         'sudo apt install ros-humble-ros-base',
         'sudo apt install ros-dev-tools',
-        'bash /opt/ros/humble/setup.bash'
+        'source /opt/ros/humble/setup.bash'
     ]
-
-    execute(cmd, 'INSTALLING ROS2')
+    execute(commands, 'INSTALLING ROS2')
 
 
 def configure_env():
     ros_domain_id = randint(0, 101)
     print(f"{red}{'-' * 25} {ros_domain_id} {'-' * 25}{reset}")
-    cmd = [
-        'echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc',
-        'echo "export ROS_DOMAIN_ID={ros_domain_id}" >> ~/.bashrc',
+    commands = [
+        'gedit -s ~/.bashrc',
+        f'echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc',
+        f'echo "export ROS_DOMAIN_ID={ros_domain_id}" >> ~/.bashrc',
         'sudo apt install ros-humble-rmw-cyclonedds-cpp',
-        'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc',
-        'gedit -s ~/.bashrc'
+        'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc'
     ]
-
-    execute(cmd, 'CONFIGURING ENVIROMENT')
+    execute(commands, 'CONFIGURING ENVIRONMENT')
 
 
 def build_repo():
-    cmd = [
+    commands = [
         'sudo rosdep init',
         'rosdep update',
         'rosdep install -i --from-path src --rosdistro humble -y',
         'sudo apt install python3-colcon-common-extensions',
         'colcon build'
     ]
-
-    execute(cmd, 'BUILDING PROJECT')
+    execute(commands, 'BUILDING PROJECT')
 
 
 def build():
