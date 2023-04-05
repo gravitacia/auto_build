@@ -1,5 +1,6 @@
 import subprocess
 from random import randint
+import sys
 
 
 red = '\033[91m'
@@ -8,19 +9,19 @@ reset = '\033[0m'
 
 def execute(commands_list, title):
     separator = '-' * 25
-    print(f"{red}{separator} {title} {separator}{reset}")
+    print(f"{red}{separator} {title} {separator}{reset}", flush=True)
 
     for cmd_input in commands_list:
         cmd = cmd_input.split()
-        print(f"{' '.join(cmd)}")
+        print(f"{' '.join(cmd)}", flush=True)
         process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         if process.returncode != 0:
-            print(f"{red}Command execution failed: {' '.join(cmd)}{reset}")
-            print(f"{red}{process.stderr.decode('utf-8')}{reset}")
+            print(f"{red}Command execution failed: {' '.join(cmd)}{reset}", flush=True)
+            print(f"{red}{process.stderr.decode('utf-8')}{reset}", flush=True)
             exit()
 
-        print(f"{process.stdout.decode('utf-8')}")
-    print(f"{red}{separator}{' ' * len(title)}{separator}{reset}")
+        print(f"{process.stdout.decode('utf-8')}", flush=True)
+    print(f"{red}{separator}{' ' * len(title)}{separator}{reset}", flush=True)
 
 
 def install_pip():
@@ -61,7 +62,7 @@ def install_ros():
 
 def configure_env():
     ros_domain_id = randint(0, 101)
-    print(f"{red}{'-' * 25} {ros_domain_id} {'-' * 25}{reset}")
+    print(f"{red}{'-' * 25} {ros_domain_id} {'-' * 25}{reset}", flush=True)
     commands = [
         'gedit -s ~/.bashrc',
         f'echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc',
