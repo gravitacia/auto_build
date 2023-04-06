@@ -14,20 +14,14 @@ def execute(commands_list, title):
     for cmd_input in commands_list:
         cmd = cmd_input.split()
         print(f"{' '.join(cmd)}", flush=True)
-
+        
         if cmd[0] == "source":
-            subprocess.call(['bash', '-c', ' '.join(cmd)])
+            os.system(f"bash -c {' '.join(cmd)}")
         else:
-            process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            for line in iter(process.stdout.readline, b''):
-                print(line.decode('utf-8').strip())
-            for line in iter(process.stderr.readline, b''):
-                print(f"{red}{line.decode('utf-8').strip()}{reset}")
-            process.communicate()
-
-        if process.returncode != 0:
-            print(f"{red}Command execution failed: {' '.join(cmd)}{reset}", flush=True)
-            exit()
+            command_exit_code = os.system(' '.join(cmd))
+            if command_exit_code != 0:
+                print(f"{red}Command execution failed: {' '.join(cmd)}{reset}", flush=True)
+                exit()
 
     print(f"{red}{separator}{' ' * len(title)}{separator}{reset}", flush=True)
 
@@ -68,22 +62,6 @@ def install_ros():
     execute(commands, 'INSTALLING ROS2')
 
 
-def install_ros2():
-    commands = [
-        'sudo apt update',
-        'sudo apt install -y curl gnupg gnupg2 lsb-release',
-        'curl http://repo.ros2.org/repos.key | sudo apt-key add -',
-        'sh -c "echo \"deb [arch=amd64,arm64,armhf] http://packages.ros.org/ros2/ubuntu `lsb_release -cs` main\" > /etc/apt/sources.list.d/ros2-latest.list"',
-        'sudo apt update',
-        'sudo apt install -y ros-humble-desktop',
-        'sudo apt install -y python3-colcon-common-extensions',
-        'sudo apt install -y ros-humble-ros-ign-acropolis',
-        'bash /opt/ros/humble/setup.bash',
-        'echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc'
-    ]
-    execute(commands, 'INSTALLING ROS2')
-
-
 def configure_env():
     ros_domain_id = randint(0, 101)
     print(f"{red}{'-' * 25} {ros_domain_id} {'-' * 25}{reset}", flush=True)
@@ -112,7 +90,7 @@ def build():
     install_pip()
     install_pip_libs()
     clone_repo()
-    install_ros2()
+    install_ros()
     configure_env()
     build_repo()
 
