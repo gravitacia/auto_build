@@ -14,20 +14,14 @@ def execute(commands_list, title):
     for cmd_input in commands_list:
         cmd = cmd_input.split()
         print(f"{' '.join(cmd)}", flush=True)
-
+        
         if cmd[0] == "source":
-            subprocess.call(['bash', '-c', ' '.join(cmd)])
+            os.system(f"bash -c {' '.join(cmd)}")
         else:
-            process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-            for line in iter(process.stdout.readline, b''):
-                print(line.decode('utf-8').strip())
-            for line in iter(process.stderr.readline, b''):
-                print(f"{red}{line.decode('utf-8').strip()}{reset}")
-            process.communicate()
-
-        if process.returncode != 0:
-            print(f"{red}Command execution failed: {' '.join(cmd)}{reset}", flush=True)
-            exit()
+            command_exit_code = os.system(' '.join(cmd))
+            if command_exit_code != 0:
+                print(f"{red}Command execution failed: {' '.join(cmd)}{reset}", flush=True)
+                exit()
 
     print(f"{red}{separator}{' ' * len(title)}{separator}{reset}", flush=True)
 
@@ -72,21 +66,21 @@ def configure_env():
     ros_domain_id = randint(0, 101)
     print(f"{red}{'-' * 25} {ros_domain_id} {'-' * 25}{reset}", flush=True)
     commands = [
-        'gedit -s ~/.bashrc',
         f'echo "source /opt/ros/humble/setup.bash" >> ~/.bashrc',
         f'echo "export ROS_DOMAIN_ID={ros_domain_id}" >> ~/.bashrc',
         'sudo apt install ros-humble-rmw-cyclonedds-cpp',
-        'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc'
+        'echo "export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp" >> ~/.bashrc',
+        'gedit -s ~/.bashrc',
     ]
     execute(commands, 'CONFIGURING ENVIRONMENT')
 
 
 def build_repo():
     commands = [
+        'sudo apt install -y python3-colcon-common-extensions',
         'sudo rosdep init',
         'rosdep update',
         'rosdep install -i --from-path src --rosdistro humble -y',
-        'sudo apt install python3-colcon-common-extensions',
         'colcon build'
     ]
     execute(commands, 'BUILDING PROJECT')
