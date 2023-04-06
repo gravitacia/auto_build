@@ -14,13 +14,21 @@ def execute(commands_list, title):
     for cmd_input in commands_list:
         cmd = cmd_input.split()
         print(f"{' '.join(cmd)}", flush=True)
-        process = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
+        if cmd[0] == "source":
+            subprocess.call(['bash', '-c', ' '.join(cmd)])
+        else:
+            process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            for line in iter(process.stdout.readline, b''):
+                print(line.decode('utf-8').strip())
+            for line in iter(process.stderr.readline, b''):
+                print(f"{red}{line.decode('utf-8').strip()}{reset}")
+            process.communicate()
+
         if process.returncode != 0:
             print(f"{red}Command execution failed: {' '.join(cmd)}{reset}", flush=True)
-            print(f"{red}{process.stderr.decode('utf-8')}{reset}", flush=True)
             exit()
 
-        print(f"{process.stdout.decode('utf-8')}", flush=True)
     print(f"{red}{separator}{' ' * len(title)}{separator}{reset}", flush=True)
 
 
