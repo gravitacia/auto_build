@@ -81,6 +81,9 @@ def build_repo():
         'sudo rosdep init',
         'rosdep update',
         'rosdep install -i --from-path src --rosdistro humble -y',
+        'git checkout develop',
+        'git pull origin develop',
+        'python3 pmexec/vsc_p.py --refresh',
         'colcon build'
     ]
     execute(commands, 'BUILDING PROJECT')
